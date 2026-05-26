@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Een kort vraagje</title>
+<style>
+:root {
+  --primary: #ff7a45; 
+  --primary-hover: #e06332;
+  --accent-warm: #f6e58d;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --text-main: #2c3e50;
+  --text-muted: #7f8c8d;
+  --border-color: #e2e8f0;
+  --input-bg: #f8fafc;
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: linear-gradient(-45deg, #a8e6cf, #dcedc1, #ffd3b6, #ffaaa5);
+  background-size: 400% 400%;
+  animation: warmGradient 15s ease infinite;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+  padding: 1rem;
+}
+
+@keyframes warmGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#app { 
+  width: 100%; 
+  max-width: 440px; 
+  z-index: 10;
+  margin: auto;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 28px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(44, 62, 80, 0.06);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@media (max-width: 380px) {
+  .card { padding: 2rem 1rem; }
+}
+
+.playful-shake { animation: playfulNudge 0.4s ease-in-out; }
+@keyframes playfulNudge {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(0.96) rotate(-2deg); }
+  70% { transform: scale(1.02) rotate(2deg); }
+}
+
+h1 { font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; letter-spacing: -0.5px; line-height: 1.2; }
+p { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+.live-badge span { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; }
+
+.btn-yes {
+  background: linear-gradient(135deg, #ff7a45, #ff6b45); 
+  color: white; 
+  border: none; 
+  border-radius: 100px;
+  padding: 16px 42px; 
+  font-size: 16px; 
+  font-weight: 700; 
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255, 122, 69, 0.25);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  display: inline-block; 
+  transform-origin: center;
+  position: relative;
+  z-index: 100;
+  max-width: 100%;
+  word-break: break-word;
+}
+.btn-yes:hover { box-shadow: 0 12px 30px rgba(255, 122, 69, 0.35); }
+
+.btn-yes:disabled {
+  background: #cbd5e1 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  transform: scale(0.98) !important;
+  opacity: 0.7;
+}
+
+.btn-no {
+  background: #ffffff; 
+  color: var(--text-main); 
+  border: 1px solid #cbd5e1; 
+  border-radius: 100px;
+  padding: 12px 32px; 
+  font-size: 15px; 
+  font-weight: 600; 
+  cursor: pointer;
+  position: fixed; 
+  z-index: 50; 
+  white-space: nowrap; 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: left 0.15s ease, top 0.15s ease, transform 0.2s ease;
+}
+
+.btn-row { display: flex; gap: 20px; justify-content: center; align-items: center; min-height: 80px; position: relative; }
+.hidden { display: none !important; }
+
+.confirm-q { 
+  font-size: 15px; 
+  font-weight: 700; 
+  color: var(--text-main); 
+  line-height: 1.5; 
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 18px;
+  white-space: pre-line;
+}
+.q-style-even { background: #f8fafc; border: 1px dashed #cbd5e1; }
+.q-style-odd { background: #fffdf5; border: 1px dashed #f6e58d; }
+
+.confirm-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+.c-btn {
+  width: 100%; padding: 14px 18px; border-radius: 16px; border: 2px solid #e2e8f0;
+  cursor: pointer; font-size: 14px; font-weight: 600; background: white;
+  color: var(--text-main); text-align: left; display: flex; justify-content: space-between; align-items: center; transition: all .2s ease;
+  line-height: 1.3;
+}
+.c-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+/* Picker-stijlen */
+.picker-container { display: flex; flex-direction: column; gap: 14px; text-align: left; margin-bottom: 2rem; }
+.picker-group { display: flex; flex-direction: column; gap: 6px; }
+.picker-group label { font-size: 14px; font-weight: 700; color: var(--text-main); }
+.picker-group input { padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; background: var(--input-bg); font-size: 16px; color: var(--text-main); outline: none; -webkit-appearance: none; }
+.picker-group input:focus { border-color: var(--primary); }
+
+/* Mini Game Grid */
+.game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 1.5rem 0; background: #f1f5f9; padding: 8px; border-radius: 18px; }
+.game-cell { aspect-ratio: 1; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.game-target { width: 90%; height: 90%; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; user-select: none; display: flex; align-items: center; justify-content: center; animation: popIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
+.target-no { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
+
+/* Gestileerde Custom Modaldialog */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(44, 62, 80, 0.4); backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); display: flex; align-items: center;
+  justify-content: center; z-index: 2000; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 1rem;
+}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: white; border-radius: 24px; padding: 2rem 1.5rem;
+  max-width: 380px; width: 100%; text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+.modal-overlay.active .modal-box { transform: scale(1); }
+.modal-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+@keyframes popIn { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+.bounce { animation: bop .8s infinite alternate cubic-bezier(0.45, 0, 0.55, 1); }
+@keyframes bop { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="gameModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modalIcon">🎉</div>
+    <h1 id="modalTitle">Geweldig gedaan!</h1>
+    <p id="modalBody" style="margin-bottom: 1.5rem;">Je hebt de 'Nee'-knop verslagen... Je beloning: We gaan meteen de date inplannen!</p>
+    <button class="btn-yes" id="modalConfirmBtn" style="width:100%; padding: 14px;" onclick="closeModalAndProceed()" disabled>Laten we gaan! ✨</button>
+  </div>
+</div>
+
+<div id="app">
+  <div class="card" id="card">
+
+    <div id="s1">
+      <div class="live-badge"><span></span>Zomaar een gedachte</div>
+      <h1 id="s1h">Hey... ik zat te denken</h1>
+      <p id="s1p">Zullen we binnenkort gezellig samen op date gaan? 😊<br><small style="font-size:12px;color:var(--text-muted); display:block; margin-top:10px;">Kies gerust de optie die het beste voelt!</small></p>
+      <div class="btn-row">
+        <button class="btn-yes" id="yesBtn" onclick="goToScheduler()">Ja, leuk!</button>
+      </div>
+    </div>
+
+    <div id="s2" class="hidden">
+      <div class="confirm-wrap">
+        <div class="prog" id="prog" style="font-size:13px; font-weight:800; color:var(--primary); margin-bottom:1rem;">💭 Even controleren...</div>
+        <div class="confirm-q" id="cq"></div>
+        <div class="confirm-btns" id="cbtns"></div>
+      </div>
+    </div>
+
+    <div id="s-game" class="hidden">
+      <div class="live-badge" style="color: #eab308; border-color: #fef08a;">🎮 BONUS LEVEL</div>
+      <h1>Klik de 'Nee' knop!</h1>
+      <p style="margin-bottom: 1rem;">Oké, ultieme deal. Raak de bewegende Nee-knop <b>5 keer</b> binnen de tijd om te winnen! <br><span id="game-status" style="font-weight:700; color:var(--text-main); display:block; margin-top:5px;">Score: 0/5 | Tijd: 10s</span></p>
+      <div class="game-grid" id="gameGrid">
+        <div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+        <div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+        <div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+      </div>
+    </div>
+
+    <div id="s4" class="hidden">
+      <div style="font-size:2rem;margin-bottom:1rem">🗓️</div>
+      <h1>Wanneer schikt het?</h1>
+      <p>Kies een dag en tijd die voor jou perfect uitkomen!</p>
+      <div class="picker-container">
+        <div class="picker-group">
+          <label for="dateInput">Welke datum?</label>
+          <input type="date" id="dateInput">
+        </div>
+        <div class="picker-group">
+          <label for="timeInput">Hoe laat ongeveer?</label>
+          <input type="time" id="timeInput" value="15:00">
+        </div>
+      </div>
+      <button class="btn-yes" style="width:100%;" onclick="submitDateTime()">Plan de date!</button>
+    </div>
+
+    <div id="s3" class="hidden">
+      <div style="font-size:3.5rem;margin-bottom:1.5rem" class="bounce">☕</div>
+      <h1 style="color: var(--primary);">Helemaal leuk!</h1>
+      <p>De plannen zijn gemaakt en ik heb er nu al zin in.<br><br>
+      We spreken af op:<br>
+      <strong style="color:var(--text-main); font-size: 1.2rem;" id="finalDateTime">Zaterdag om 15:00 uur</strong><br><br>
+      Zorg dat je er bent en neem je goede humeur mee! ✨</p>
+    </div>
+
+  </div>
+</div>
+
+<button class="btn-no" id="noBtn">Nee</button>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const s1 = document.getElementById('s1');
+const s2 = document.getElementById('s2');
+const s3 = document.getElementById('s3');
+const s4 = document.getElementById('s4');
+const sGame = document.getElementById('s-game');
+const card = document.getElementById('card');
+const gameModal = document.getElementById('gameModal');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+let scale = 1, prankOn = false, noUnlocked = false, qIndex = 0;
+// Maximale schaal verlaagd naar 1.6 zodat mobiel ontwerp altijd prachtig en bruikbaar blijft
+const MAX_SCALE = 1.6, SCALE_STEP = 0.12;
+
+const growthTexts = [
+  "Weet je dat echt heel zeker? Geen twijfel?",
+  "Wacht eens... denk er nog héél even rustig over na.",
+  "Zeker weten? Er is een reële kans dat er taart bij is.",
+  "Is dit je definitieve antwoord? De sterren staan gunstiger voor ja!",
+  "Weet je het echt honderd procent zeker? Mijn humeur adviseert ja.",
+  "Draai je nu niet een fantastische middag de nek om?",
+  "Kijk eens hoe groot die Ja-knop is geworden, dat is een teken!"
+];
+let growthIndex = 0;
+
+function positionNoInitial() {
+  const r = yesBtn.getBoundingClientRect();
+  noBtn.style.left = Math.min(window.innerWidth - noBtn.offsetWidth - 20, r.right + 20) + 'px';
+  noBtn.style.top  = (r.top + window.scrollY) + 'px';
+}
+setTimeout(positionNoInitial, 100);
+
+function moveNo() {
+  if (noUnlocked) return;
+  if (!prankOn) { prankOn = true; document.getElementById('s1h').textContent = "Oei, knoppen-storing!"; }
+  
+  const currentText = growthTexts[growthIndex % growthTexts.length];
+  document.getElementById('s1p').innerHTML = `${currentText}<br><small style="font-size:12px;color:var(--text-muted);display:block;margin-top:10px;">De 'Nee'-optie lijkt vandaag een eigen willetje te hebben.</small>`;
+  growthIndex++;
+
+  // Anti-overlap algoritme met de JA-knop
+  const yesRect = yesBtn.getBoundingClientRect();
+  const pad = 40;
+  
+  let targetX = 0;
+  let targetY = 0;
+  let attempts = 0;
+  let overlaps = true;
+
+  while (overlaps && attempts < 50) {
+    const maxX = window.innerWidth  - noBtn.offsetWidth  - pad;
+    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+    
+    targetX = Math.max(pad/2, Math.random() * maxX);
+    targetY = Math.max(pad/2, Math.random() * maxY);
+
+    // Definieer een veilige zone rondom de JA-knop waar de NEE-knop absoluut niet mag landen
+    const safeZone = 30; 
+    const overlapX = targetX + noBtn.offsetWidth > yesRect.left - safeZone && targetX < yesRect.right + safeZone;
+    const overlapY = targetY + noBtn.offsetHeight > yesRect.top + window.scrollY - safeZone && targetY < yesRect.bottom + window.scrollY + safeZone;
+    
+    overlaps = overlapX && overlapY;
+    attempts++;
+  }
+  
+  noBtn.style.left = targetX + 'px';
+  noBtn.style.top  = targetY + 'px';
+
+  scale = Math.min(MAX_SCALE, scale + SCALE_STEP);
+  yesBtn.style.transform = `scale(${scale})`;
+
+  if (scale >= MAX_SCALE && growthIndex >= 7) unlockNo();
+}
+
+function unlockNo() {
+  if (noUnlocked) return;
+  noUnlocked = true;
+  noBtn.removeEventListener('mouseenter', moveNo);
+  noBtn.removeEventListener('touchstart', touchNo);
+  
+  document.getElementById('s1h').textContent = "Hè hè, te pakken!";
+  document.getElementById('s1p').innerHTML = 'De Nee-knop is eindelijk moe van al het rennen.<br><small style="font-size:12px;color:var(--text-muted);display:block;margin-top:10px;">Als je er écht heel bewust op wilt klikken... ga je gang.</small>';
+
+  noBtn.style.position = 'relative';
+  noBtn.style.left = '0px';
+  noBtn.style.top  = '0px';
+  noBtn.style.margin = '15px auto 0';
+  noBtn.style.display = 'block';
+  noBtn.style.background = '#f1f5f9';
+  noBtn.style.color = 'var(--text-main)';
+  noBtn.style.borderColor = '#cbd5e1';
+  
+  document.querySelector('.btn-row').appendChild(noBtn);
+  
+  noBtn.addEventListener('click', () => {
+    card.classList.add('playful-shake');
+    setTimeout(() => { card.classList.remove('playful-shake'); startGauntlet(); }, 400);
+  });
+}
+
+function touchNo(e) { e.preventDefault(); moveNo(); }
+noBtn.addEventListener('mouseenter', moveNo);
+noBtn.addEventListener('touchstart', touchNo, {passive:false});
+
+window.addEventListener('resize', () => {
+  if (!noUnlocked && !prankOn) positionNoInitial();
+});
+
+function goToScheduler() {
+  s1.classList.add('hidden'); s2.classList.add('hidden'); sGame.classList.add('hidden');
+  s4.classList.remove('hidden'); noBtn.style.display = 'none';
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('dateInput').value = tomorrow.toISOString().split('T')[0];
+}
+
+function submitDateTime() {
+  const dVal = document.getElementById('dateInput').value;
+  const tVal = document.getElementById('timeInput').value;
+  if(!dVal) { alert("Kies nog even een leuke datum uit!"); return; }
+  const dateObj = new Date(dVal);
+  const options = { weekday: 'long', month: 'long', day: 'numeric' };
+  document.getElementById('finalDateTime').textContent = `${dateObj.toLocaleDateString('nl-NL', options)} om ${tVal} uur`;
+  s4.classList.add('hidden'); s3.classList.remove('hidden');
+}
+
+// Alle 45 vragen keurig op een rij
+const qs = [
+  { q: "Weet je zeker dat je nee wilt zeggen?", yes: "Ja, ik weet het zeker", no: "Wacht — eigenlijk toch wel ja!" },
+  { q: "Echt heel erg super-de-puper zeker?", yes: "Echt heel zeker", no: "Vooruit. Ja tegen de date." },
+  { q: "Op een schaal van 'nee' tot 'absoluut niet', waar zit je ongeveer?", yes: "Standvastig op 'nee'", no: "Ergens rond de 'ja' eigenlijk" },
+  { q: "Wat nou als ik beloof dat we na afloop lekkere snacks gaan halen?", yes: "Snacks lossen dit niet op", no: "Zeg dat dan meteen. Ja!" },
+  { q: "Mijn dagdromen wijzen uit dat 100% van de mensen die deze uitnodiging accepteerden een geweldige tijd hadden.", yes: "Je fantasie is gekleurd. Nee.", no: "Klinkt als een betrouwbaar onderzoek. Ja." },
+  { q: "In een parallel universum heb je al ja gezegd. Wil je de kosmische balans verstoren?", yes: "Mijn universum, mijn regels", no: "Goed punt, laten we synchroon lopen. Ja." },
+  { q: "Als we kijken naar waar dit heen gaat, leidt werkelijk elk pad naar koffie en een glimlach.", yes: "Ik neem een zijweggetje", no: "Een koffie-route klinkt gezellig. Ja." },
+  { q: "Hoe meer je op nee klikt, hoe langer dit gesprek duurt. Je test mijn geduld!", yes: "Ik kan dit de hele dag volhouden", no: "Laten we tijd besparen. Ja." },
+  { q: "Nee zeggen tegen een gezellige middag is eigenlijk tegen mijn regels van plezier.", yes: "Laat dat regelboekje maar zien", no: "Tegen gezelligheid kan ik niks inbrengen. Ja." },
+  { q: "Als nee ja betekent, en ja nee betekent, wat betekent 'misschien' dan?", yes: "Nog steeds nee.", no: "...ja?" },
+  { q: "De echte vraag is niet óf je ja gaat zeggen. Het is de vraag wanneer je eindelijk toegeeft!", yes: "Nooit!", no: "Nu meteen, blijkbaar." },
+  { q: "Weet je wel heel zeker dat je niet gewoon op 'nee' blijft drukken om te kijken wat er hierna gebeurt?", yes: "Nee, ik meen het echt", no: "Betrapt. Ja." },
+  { q: "Druk op de optie die niet jouw echte keuze vertegenwoordigt om niet verder te gaan.", yes: "Nee", no: "Ja" },
+  { q: "Om het skippen van deze date te skippen, druk op de knop die niet deze knop is.", yes: "Deze knop?", no: "Die andere knop." },
+  { q: "Wat is er nou gekker dan een gegarandeerd leuke middag aan je voorbij laten gaan?", yes: "Deze hele vragenlijst", no: "Helemaal niks. Laten we gaan. Ja." },
+  { q: "Je bent volledig vrij om ja te zeggen, hoor!", yes: "Ook volledig vrij om nee te zeggen", no: "Vrijheid smaakt beter met koffie. Ja." },
+  { q: "Zou je liever thuis blijven hangen, of mee gaan op een leuk klein avontuur?", yes: "Thuisblijven is heerlijk", no: "Avontuur, overduidelijk." },
+  { q: "Ik heb het al aan mijn beste vriend verteld. Die zit nu te wachten op updates.", yes: "Zeg maar dat het nee is", no: "Oh nee, de sociale druk! Vooruit, ja." },
+  { q: "Mijn familie denkt dat dit een fantastisch idee is.", yes: "Vertel ze dat ik nee zei", no: "Als zij het goedkeuren, ja!" },
+  { q: "Ik zit hier de hele tijd zenuwachtig treats te eten. Red mijn eetlust.", yes: "Niet mijn probleem", no: "We gaan samen snacks delen. Ja." },
+  { q: "Wat als ik beloof dat ik een geweldige muziek-playlist met je deel?", yes: "Absoluut niet", no: "Goede muziek krijgt me altijd mee. Ik ben erbij." },
+  { q: "Lekker moe zijn na een topdag buiten is oprecht het beste gevoel.", yes: "Waar, maar alsnog nee.", no: "Dat goede soort moe. Ja!" },
+  { q: "Het is in feite gewoon een eerste ontmoeting waarbij lachen om elkaar gegarandeerd is.", yes: "Klinkt doodeng. Alsnog nee.", no: "Klinkt perfect. JA." },
+  { q: "Ik beloof dat ik niet te hard zal lachen als je per ongeluk over een onzichtbare drempel struikelt.", yes: "Je gaat sowieso lachen", no: "Deal. Ja tegen de date." },
+  { q: "Wat als ik toegeef dat ik eigenlijk ook geen idee heb wat ik aan het doen ben?", yes: "Dat maakt het erger", no: "Twee klunzen is veel grappiger. Ja!" },
+  { q: "De kans dat we het gezellig hebben is supergroot. Niet vechten tegen de logica!", yes: "Ik betwist je logica", no: "Logica wint. Ja." },
+  { q: "Nee zeggen tegen een leuke middag is een gemiste kans. Weet je het echt zeker?", yes: "Ik krijg nog genoeg kansen", no: "Ik wil niks missen. Ja." },
+  { q: "Je blijft me maar antwoorden geven die totaal niet matchen met hoe leuk je bent.", yes: "Ik ben gewoon heel eerlijk", no: "Laten we dat rechtzetten. Ja." },
+  { q: "Foutmelding: Een geldige reden om nee te zeggen is nergens in je dossier gevonden.", yes: "Die reden is strikt geheim", no: "Systeemherstel naar ja." },
+  { q: "Dit gaat er niet om of je uit wilt gaan. Het gaat erom erachter te komen of je níét niet mee wilt. Dus... wil je?", yes: "Ik zeg nee", no: "Ik zeg ja" },
+  { q: "Bevestig even dat je weigert om deze uitnodiging niet te accepteren.", yes: "Bevestigd", no: "Wacht — ja dus?" },
+  { q: "De knop met 'ja' in je hart, met welke fysieke knop komt die overeen?", yes: "De knop die ik nu niet indruk", no: "Deze knop hierzo" },
+  { q: "Door op 'nee' te klikken ga je akkoord met de vriendschapsvoorwaarden om altijd aardig tegen me te zijn.", yes: "Ik wil heronderhandelen", no: "Voorwaarden geaccepteerd. Ja." },
+  { q: "Klik hier om het 'niet gezellig gaan hangen met mij' te annuleren.", yes: "Geannuleerd", no: "Ge-de-annuleerd! Ja." },
+  { q: "Eerlijke vraag: wat zou ervoor zorgen dat je wél ja zegt?", yes: "Helemaal niets op dit moment", no: "Eerlijk? Je doorzettingsvermogen. Ja." },
+  { q: "Ik doe al zo lang mijn best. Telt dat niet voor een klein beetje mee?", yes: "Alleen voor de doorzettingspunten", no: "Het telt voor heel veel mee. Ja." },
+  { q: "Ik denk echt dat je een oprecht leuke tijd zult hebben. Echt waar.", yes: "Lief van je. Alsnog nee.", no: "...oké dan. Ja." },
+  { q: "Wat als we afspreken dat als het ongemakkelijk is, we er simpelweg nooit meer over praten?", yes: "Moedig aanbod. Alsnog nee.", no: "Deal. Ja." },
+  { q: "Ik neem chocola mee.", yes: "Ik heb thuis ook chocola", no: "CHOCOLA. Definitief antwoord. Ja." },
+  { q: "Ik vraag dit al zo lang dat ik stiekem begin uit te kijken naar deze antwoorden.", yes: "Het wordt een beetje oud. Nee.", no: "Elke dag is prima. Ja." },
+  { q: "Je hebt bijna elke vraag overleefd. Wat zegt dat eigenlijk over jou?", yes: "Dat ik koppig ben. Nee.", no: "Dat ik sowieso al ja ging zeggen. Ja." },
+  { q: "Hier is het geheim: ik weet al dat we het leuk gaan hebben. Jij moet het alleen nog even inzien.", yes: "Nogal zelfverzekerd. Nee.", no: "...je hebt waarschijnlijk wel gelijk. Ja." },
+  { q: "Als dit een romantische komedie was, dan was dit de scène waarin je glimlacht en ja zegt.", yes: "Ik hou meer van arthouse. Alsnog nee.", no: "Ik wil het goede einde. Ja." },
+  { q: "Wat als ik het heel lief vraag met een kers op de taart?", yes: "Niet genoeg kersen. Nee.", no: "...dat werkt altijd bij mij. Ja." },
+  { q: "Weet je wat? Laten we de allerlaatste beslissing overdragen aan het lot.", yes: "Wat voor lot?", no: "Spelletjes bepalen alles. Ja." }
+];
+
+const progressHeaders = ["Je antwoord overwegen...", "Even dubbelchecken...", "Keuzes analyseren...", "Ben je nu gewoon koppig?...", "De twijfel wegfilteren..."];
+
+function startGauntlet() {
+  noBtn.style.display = 'none'; qIndex = 0;
+  s1.classList.add('hidden'); s2.classList.remove('hidden');
+  showQ();
+}
+
+function showQ() {
+  if (qIndex === qs.length) {
+    startMiniGame();
+    return;
+  }
+
+  const q = qs[qIndex];
+  document.getElementById('prog').textContent = progressHeaders[Math.floor(Math.random() * progressHeaders.length)];
+  
+  const questionEl = document.getElementById('cq');
+  questionEl.textContent = q.q;
+  questionEl.className = "confirm-q " + (qIndex % 2 === 0 ? "q-style-even" : "q-style-odd");
+  
+  const btns = document.getElementById('cbtns');
+  btns.innerHTML = '';
+
+  const yb = document.createElement('button');
+  yb.className = 'c-btn'; yb.textContent = q.no; yb.onclick = goToScheduler;
+
+  const nb = document.createElement('button');
+  nb.className = 'c-btn'; nb.textContent = q.yes;
+  nb.onclick = () => {
+    qIndex++;
+    showQ();
+  };
+
+  if (Math.random() > 0.5) { btns.appendChild(yb); btns.appendChild(nb); } 
+  else { btns.appendChild(nb); btns.appendChild(yb); }
+}
+
+/* --- DE MINI GAME LOGICA --- */
+let gameScore = 0;
+let gameTimeLeft = 10;
+let gameInterval, targetTimeout;
+
+function startMiniGame() {
+  s2.classList.add('hidden');
+  sGame.classList.remove('hidden');
+  gameScore = 0;
+  gameTimeLeft = 10;
+  updateGameStatus();
+  
+  gameInterval = setInterval(() => {
+    gameTimeLeft--;
+    updateGameStatus();
+    if (gameTimeLeft <= 0) {
+      endMiniGame('timeout');
+    }
+  }, 1000);
+
+  spawnTarget();
+}
+
+function updateGameStatus() {
+  document.getElementById('game-status').textContent = `Score: ${gameScore}/5 | Tijd: ${gameTimeLeft}s`;
+}
+
+function spawnTarget() {
+  document.querySelectorAll('.game-target').forEach(el => el.remove());
+  if (gameTimeLeft <= 0 || gameScore >= 5) return;
+
+  const cells = document.querySelectorAll('.game-cell');
+  const randomCell = cells[Math.floor(Math.random() * cells.length)];
+  
+  const btn = document.createElement('button');
+  btn.className = 'game-target target-no';
+  btn.textContent = 'Nee';
+  
+  const handleHit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    gameScore++;
+    updateGameStatus();
+    if (gameScore >= 5) {
+      endMiniGame('won');
+    } else {
+      spawnTarget();
+    }
+  };
+  
+  btn.addEventListener('touchstart', handleHit, { passive: false });
+  btn.addEventListener('click', handleHit);
+  
+  randomCell.appendChild(btn);
+  targetTimeout = setTimeout(spawnTarget, 1400 - (gameScore * 120));
+}
+
+function endMiniGame(reason) {
+  clearInterval(gameInterval);
+  clearTimeout(targetTimeout);
+  document.querySelectorAll('.game-target').forEach(el => el.remove());
+  
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const modalIcon = document.getElementById('modalIcon');
+  
+  if (reason === 'timeout') {
+    modalIcon.textContent = "⏰";
+    modalTitle.textContent = "Tijd is op!";
+    modalBody.textContent = "Je reflexen lieten je helaas een klein beetje in de steek... Je straf: We gaan gezellig de date inplannen!";
+  } else {
+    modalIcon.textContent = "🎉";
+    modalTitle.textContent = "Geweldig gedaan!";
+    modalBody.textContent = "Je hebt de bewegende 'Nee'-knop verslagen! Je welverdiende beloning: We gaan nu direct de date inplannen.";
+  }
+  
+  modalConfirmBtn.disabled = true;
+  gameModal.classList.add('active');
+
+  setTimeout(() => {
+    modalConfirmBtn.disabled = false;
+  }, 1200);
+}
+
+function closeModalAndProceed() {
+  gameModal.classList.remove('active');
+  goToScheduler();
+}
+</script>
+</body>
+</html>
